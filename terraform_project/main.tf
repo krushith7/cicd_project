@@ -53,7 +53,7 @@ resource "aws_security_group" "sg" {
 
 # Lambda function integration (optional)
 resource "aws_lambda_function" "lambda" {
-  filename      = "C:/Users/Dell/Desktop/cicd project/backend/lambda.zip"  # Ensure this points to your actual zip file
+  filename      = "../backend/lambda.zip"  # Ensure this points to your actual zip file
   function_name = "TodoLambda"
   role          = aws_iam_role.lambda_exec.arn
   handler       = "index.handler"
