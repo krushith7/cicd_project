@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            text-align: center;
+        }
+        #taskList {
+            margin-top: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 200px;
+            margin: 10px;
+        }
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>To-Do App</h1>
+    <input type="text" id="taskInput" placeholder="Add a task..." />
+    <button onclick="addTask()">Add Task</button>
+
+    <div id="taskList"></div>
+
+    <script>
+        const taskList = document.getElementById('taskList');
+        const taskInput = document.getElementById('taskInput');
+
+        function addTask() {
+            const task = taskInput.value;
+            if (task) {
+                // Make a POST request to backend API to save task
+                fetch('http://localhost:3000/api/addTask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ task: task })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Task added:', data);
+                    fetchTasks();  // Refresh task list
+                })
+                .catch(error => console.error('Error:', error));
+        
+                taskInput.value = '';  // Clear input field
+            }
+        }
+        
+        function fetchTasks() {
+            fetch('http://localhost:3000/api/getTasks')
+                .then(response => response.json())
+                .then(data => {
+                    taskList.innerHTML = '';  // Clear existing tasks
+                    data.forEach(task => {
+                        const taskElement = document.createElement('div');
+                        taskElement.textContent = task;
+                        taskList.appendChild(taskElement);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
