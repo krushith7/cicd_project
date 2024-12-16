@@ -17,17 +17,21 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set up Node.js
+      working-directory: backend
       uses: actions/setup-node@v2
       with:
         node-version: '14'
 
     - name: Install dependencies
+      working-directory: backend
       run: npm install
 
     - name: Run tests
+      working-directory: backend
       run: npm test
 
     - name: Build application
+      working-directory: backend
       run: npm run build
 
     - name: Deploy to AWS
@@ -35,6 +39,6 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: 'us-east-1'
+      working-directory: backend
       run: |
         aws s3 sync ./build/ s3://${{ secrets.S3_BUCKET_NAME }} --delete
-        aws ec2 describe-instances --instance-id ${{ secrets.EC2_INSTANCE_ID }}
